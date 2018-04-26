@@ -57,7 +57,7 @@ public class PageEndpointImpl<T, S> implements PageEndpoint<T> {
 		Function<String, Optional<Class<Identifier>>> identifierClassFunction,
 		Function<String, Try<SingleModel<T>>> singleModelFunction,
 		Supplier<Optional<CollectionRoutes<T>>> collectionRoutesSupplier,
-		Supplier<Optional<Representor<T, Object>>> representorSupplier,
+		Supplier<Optional<Representor<T>>> representorSupplier,
 		Supplier<Optional<ItemRoutes<T, S>>> itemRoutesSupplier,
 		Function<String, Optional<NestedCollectionRoutes<T, Object>>>
 			nestedCollectionRoutesFunction,
@@ -238,7 +238,7 @@ public class PageEndpointImpl<T, S> implements PageEndpoint<T> {
 	private ThrowableFunction<SingleModel<T>, Optional<Object>>
 		_getIdentifierFunction(String nestedName) {
 
-		Optional<Representor<T, Object>> optional = _representorSupplier.get();
+		Optional<Representor<T>> optional = _representorSupplier.get();
 
 		return parentSingleModel -> optional.map(
 			Representor::getRelatedCollections
@@ -263,8 +263,7 @@ public class PageEndpointImpl<T, S> implements PageEndpoint<T> {
 	private final String _name;
 	private final Function<String, Optional<NestedCollectionRoutes<T, Object>>>
 		_nestedCollectionRoutesFunction;
-	private final Supplier<Optional<Representor<T, Object>>>
-		_representorSupplier;
+	private final Supplier<Optional<Representor<T>>> _representorSupplier;
 	private final Function<String, Try<SingleModel<T>>> _singleModelFunction;
 
 }
