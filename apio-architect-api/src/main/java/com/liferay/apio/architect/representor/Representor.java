@@ -22,18 +22,14 @@ import com.liferay.apio.architect.identifier.Identifier;
 import com.liferay.apio.architect.language.Language;
 import com.liferay.apio.architect.related.RelatedCollection;
 import com.liferay.apio.architect.related.RelatedModel;
-import com.liferay.apio.architect.unsafe.Unsafe;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -52,63 +48,7 @@ import java.util.stream.Stream;
  * @param  <T> the model's type
  * @see    Representor.Builder
  */
-public class Representor<T> {
-
-	/**
-	 * Returns the binary resources linked to a model.
-	 *
-	 * @return the binary resources linked to a model
-	 */
-	public Optional<BinaryFunction<T>> getBinaryFunction(String binaryId) {
-		return Optional.ofNullable(_binaryFunctions.get(binaryId));
-	}
-
-	/**
-	 * Returns the binary resources linked to a model.
-	 *
-	 * @return the binary resources linked to a model
-	 */
-	public List<FieldFunction<T, BinaryFile>> getBinaryFunctions() {
-		return Optional.ofNullable(
-			_fieldFunctions.get("BINARY")
-		).<List<FieldFunction<T, BinaryFile>>>map(
-			Unsafe::unsafeCast
-		).orElseGet(
-			Collections::emptyList
-		);
-	}
-
-	/**
-	 * Returns the map containing the boolean field names and the functions to
-	 * get those fields.
-	 *
-	 * @return the map containing the boolean field names and functions
-	 */
-	public List<FieldFunction<T, Boolean>> getBooleanFunctions() {
-		return Optional.ofNullable(
-			_fieldFunctions.get("BOOLEAN")
-		).<List<FieldFunction<T, Boolean>>>map(
-			Unsafe::unsafeCast
-		).orElseGet(
-			Collections::emptyList
-		);
-	}
-
-	/**
-	 * Returns the map containing the boolean list field names and the functions
-	 * to get those fields.
-	 *
-	 * @return the map containing the boolean list field names and functions
-	 */
-	public List<FieldFunction<T, List<Boolean>>> getBooleanListFunctions() {
-		return Optional.ofNullable(
-			_fieldFunctions.get("BOOLEAN_LIST")
-		).<List<FieldFunction<T, List<Boolean>>>>map(
-			Unsafe::unsafeCast
-		).orElseGet(
-			Collections::emptyList
-		);
-	}
+public class Representor<T> extends BaseRepresentor<T> {
 
 	/**
 	 * Returns the model's identifier.
@@ -118,80 +58,6 @@ public class Representor<T> {
 	 */
 	public Object getIdentifier(T model) {
 		return _identifierFunction.apply(model);
-	}
-
-	/**
-	 * Returns the links.
-	 *
-	 * @return the links
-	 */
-	public List<FieldFunction<T, String>> getLinkFunctions() {
-		return Optional.ofNullable(
-			_fieldFunctions.get("LINK")
-		).<List<FieldFunction<T, String>>>map(
-			Unsafe::unsafeCast
-		).orElseGet(
-			Collections::emptyList
-		);
-	}
-
-	/**
-	 * Returns a map containing the localized string field names and the
-	 * functions to get those fields.
-	 *
-	 * @return the map containing the localized string field names and functions
-	 */
-	public List<FieldFunction<T, Function<Language, String>>>
-		getLocalizedStringFunctions() {
-
-		return Optional.ofNullable(
-			_fieldFunctions.get("LOCALIZED")
-		).<List<FieldFunction<T, Function<Language, String>>>>map(
-			Unsafe::unsafeCast
-		).orElseGet(
-			Collections::emptyList
-		);
-	}
-
-	/**
-	 * Returns the list of nested field functions.
-	 *
-	 * @return the list of nested field functions.
-	 */
-	public List<NestedFieldFunction<T, ?>> getNestedFieldFunctions() {
-		return _nestedFieldFunctions;
-	}
-
-	/**
-	 * Returns the map containing the number field names and the functions to
-	 * get those fields.
-	 *
-	 * @return the map containing the number field names and functions
-	 */
-	public List<FieldFunction<T, Number>> getNumberFunctions() {
-		return Optional.ofNullable(
-			_fieldFunctions.get("NUMBER")
-		).<List<FieldFunction<T, Number>>>map(
-			Unsafe::unsafeCast
-		).orElseGet(
-			Collections::emptyList
-		);
-	}
-
-	/**
-	 * Returns the map containing the number list field names and the functions
-	 * to get those fields.
-	 *
-	 * @return the map containing the number list field names and functions
-	 */
-	public List<FieldFunction<T, List<Number>>> getNumberListFunctions() {
-		return Optional.ofNullable(
-			_fieldFunctions.get("NUMBER_LIST")
-		).<List<FieldFunction<T, List<Number>>>>map(
-			Unsafe::unsafeCast
-		).orElseGet(
-			Collections::emptyList
-		);
 	}
 
 	/**
@@ -212,61 +78,8 @@ public class Representor<T> {
 		);
 	}
 
-	/**
-	 * Returns the related models.
-	 *
-	 * @return the related models
-	 */
-	public List<RelatedModel<T, ?>> getRelatedModels() {
-		return _relatedModels;
-	}
-
-	/**
-	 * Returns the map containing the string field names and the functions to
-	 * get those fields.
-	 *
-	 * @return the map containing the string field names and functions
-	 */
-	public List<FieldFunction<T, String>> getStringFunctions() {
-		return Optional.ofNullable(
-			_fieldFunctions.get("STRING")
-		).<List<FieldFunction<T, String>>>map(
-			Unsafe::unsafeCast
-		).orElseGet(
-			Collections::emptyList
-		);
-	}
-
-	/**
-	 * Returns the map containing the string list field names and the functions
-	 * to get those fields.
-	 *
-	 * @return the map containing the string list field names and functions
-	 */
-	public List<FieldFunction<T, List<String>>> getStringListFunctions() {
-		return Optional.ofNullable(
-			_fieldFunctions.get("STRING_LIST")
-		).<List<FieldFunction<T, List<String>>>>map(
-			Unsafe::unsafeCast
-		).orElseGet(
-			Collections::emptyList
-		);
-	}
-
-	/**
-	 * Returns the types.
-	 *
-	 * @return the types
-	 */
-	public List<String> getTypes() {
-		return _types;
-	}
-
+	@Override
 	public boolean isNested() {
-		if (_identifierFunction == null) {
-			return true;
-		}
-
 		return false;
 	}
 
@@ -300,19 +113,6 @@ public class Representor<T> {
 			_biConsumer = biConsumer;
 
 			_representor = new Representor<>(identifierClass, supplier);
-		}
-
-		/**
-		 * Adds a type for a nested resource, skipping the identifier function
-		 * because nested resources don't have an ID.
-		 *
-		 * @param  type the type name
-		 * @return the builder's step
-		 */
-		public FirstStep<T> nestedTypes(String type, String... types) {
-			Representor<T> representor = _withTypes(_representor, type, types);
-
-			return new FirstStep<>(representor, _biConsumer, _identifierClass);
 		}
 
 		/**
@@ -528,20 +328,22 @@ public class Representor<T> {
 		 * Provides information about a nested field.
 		 *
 		 * @param  key the field's name
-		 * @param  transformFunction the function that transforms the model
-		 *         into the model used inside the nested representor
+		 * @param  transformFunction the function that transforms the model into
+		 *         the model used inside the nested nestedRepresentor
 		 * @param  representorFunction the function that creates the nested
-		 *         representor
+		 *         nestedRepresentor
 		 * @return the builder's step
 		 */
 		public <W> FirstStep<T> addNested(
 			String key, Function<T, W> transformFunction,
-			Function<Builder<W, ?>, Representor<W>> representorFunction) {
+			Function<NestedRepresentor.Builder<W>, NestedRepresentor<W>>
+				representorFunction) {
 
 			NestedFieldFunction<T, W> nestedFieldFunction =
 				new NestedFieldFunction<>(
 					key, transformFunction,
-					representorFunction.apply(new Builder<>()));
+					representorFunction.apply(
+						new NestedRepresentor.Builder<>()));
 
 			Representor<T> representor = _withNestedFieldFunction(
 				_representor, nestedFieldFunction);
@@ -677,8 +479,8 @@ public class Representor<T> {
 		 * Provides a lambda function that can be used to obtain a model's
 		 * identifier.
 		 *
-		 * @param  identifierFunction lambda function used to obtain a
-		 *         model's identifier
+		 * @param  identifierFunction lambda function used to obtain a model's
+		 *         identifier
 		 * @return the builder's next step
 		 */
 		public FirstStep<T> identifier(Function<T, U> identifierFunction) {
@@ -708,7 +510,7 @@ public class Representor<T> {
 		Representor<T> representor,
 		FieldFunction<T, BinaryFile> fieldFunction) {
 
-		representor._binaryFunctions.put(
+		representor.binaryFunctions.put(
 			fieldFunction.key, (BinaryFunction<T>)fieldFunction.function);
 
 		return _withFieldFunction(representor, fieldFunction, "BINARY");
@@ -734,7 +536,7 @@ public class Representor<T> {
 		Representor<T> newRepresentor = new Representor<>(representor);
 
 		List<FieldFunction<T, ?>> list =
-			newRepresentor._fieldFunctions.computeIfAbsent(
+			newRepresentor.fieldFunctions.computeIfAbsent(
 				key, __ -> new ArrayList<>());
 
 		list.add(fieldFunction);
@@ -771,7 +573,7 @@ public class Representor<T> {
 
 		Representor<T> newRepresentor = new Representor<>(representor);
 
-		newRepresentor._nestedFieldFunctions.add(nestedFieldFunction);
+		newRepresentor.nestedFieldFunctions.add(nestedFieldFunction);
 
 		return newRepresentor;
 	}
@@ -804,7 +606,7 @@ public class Representor<T> {
 
 		Representor<T> newRepresentor = new Representor<>(representor);
 
-		newRepresentor._relatedModels.add(relatedModel);
+		newRepresentor.relatedModels.add(relatedModel);
 
 		return newRepresentor;
 	}
@@ -827,8 +629,8 @@ public class Representor<T> {
 
 		Representor<T> newRepresentor = new Representor<>(representor);
 
-		newRepresentor._types.add(type);
-		Collections.addAll(newRepresentor._types, types);
+		newRepresentor.types.add(type);
+		Collections.addAll(newRepresentor.types, types);
 
 		return newRepresentor;
 	}
@@ -837,54 +639,24 @@ public class Representor<T> {
 		Class<? extends Identifier<?>> identifierClass,
 		Supplier<List<RelatedCollection<?>>> supplier) {
 
-		_binaryFunctions = new LinkedHashMap<>();
-		_fieldFunctions = new LinkedHashMap<>();
 		_identifierClass = identifierClass;
-		_nestedFieldFunctions = new ArrayList<>();
+		_supplier = supplier;
+
 		_relatedCollections = new ArrayList<>();
-		_supplier = supplier;
-		_relatedModels = new ArrayList<>();
-		_types = new ArrayList<>();
-	}
-
-	private Representor(
-		Map<String, BinaryFunction<T>> binaryFunctions,
-		Map<String, List<FieldFunction<T, ?>>> fieldFunctions,
-		Class<? extends Identifier<?>> identifierClass,
-		Function<T, ?> identifierFunction,
-		List<NestedFieldFunction<T, ?>> nestedFieldFunctions,
-		List<RelatedCollection<?>> relatedCollections,
-		List<RelatedModel<T, ?>> relatedModels,
-		Supplier<List<RelatedCollection<?>>> supplier, List<String> types) {
-
-		_binaryFunctions = binaryFunctions;
-		_fieldFunctions = fieldFunctions;
-		_identifierClass = identifierClass;
-		_identifierFunction = identifierFunction;
-		_nestedFieldFunctions = nestedFieldFunctions;
-		_relatedCollections = relatedCollections;
-		_relatedModels = relatedModels;
-		_supplier = supplier;
-		_types = types;
 	}
 
 	private Representor(Representor<T> representor) {
-		this(
-			representor._binaryFunctions, representor._fieldFunctions,
-			representor._identifierClass, representor._identifierFunction,
-			representor._nestedFieldFunctions, representor._relatedCollections,
-			representor._relatedModels, representor._supplier,
-			representor._types);
+		super(representor);
+
+		_identifierClass = representor._identifierClass;
+		_identifierFunction = representor._identifierFunction;
+		_relatedCollections = representor._relatedCollections;
+		_supplier = representor._supplier;
 	}
 
-	private final Map<String, BinaryFunction<T>> _binaryFunctions;
-	private final Map<String, List<FieldFunction<T, ?>>> _fieldFunctions;
 	private final Class<? extends Identifier<?>> _identifierClass;
 	private Function<T, ?> _identifierFunction;
-	private final List<NestedFieldFunction<T, ?>> _nestedFieldFunctions;
 	private final List<RelatedCollection<?>> _relatedCollections;
-	private final List<RelatedModel<T, ?>> _relatedModels;
 	private final Supplier<List<RelatedCollection<?>>> _supplier;
-	private final List<String> _types;
 
 }

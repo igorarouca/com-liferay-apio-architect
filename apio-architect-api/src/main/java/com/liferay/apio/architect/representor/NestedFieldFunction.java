@@ -25,15 +25,17 @@ import java.util.function.Function;
 public class NestedFieldFunction<T, S> {
 
 	public NestedFieldFunction(
-		String key, Function<T, S> function, Representor<S> representor) {
+		String key, Function<T, S> function,
+		NestedRepresentor<S> nestedRepresentor) {
 
-		this.representor = representor;
+		this.nestedRepresentor = nestedRepresentor;
 		this.key = key;
 		this.function = function;
 	}
 
 	/**
-	 * The function that transforms the model into the value used in the {@code NestedRepresentor#Builder}.
+	 * The function that transforms the model into the value used in the {@code
+	 * NestedRepresentor#Builder}.
 	 *
 	 * @review
 	 */
@@ -49,6 +51,6 @@ public class NestedFieldFunction<T, S> {
 	/**
 	 * The field's {@code NestedRepresentor}
 	 */
-	public final Representor<S> representor;
+	public final NestedRepresentor<S> nestedRepresentor;
 
 }
