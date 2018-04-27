@@ -234,6 +234,16 @@ public abstract class BaseRepresentor<T> {
 
 	public abstract boolean isNested();
 
+	public abstract static class BaseBuilder<T, S extends BaseRepresentor<T>> {
+
+		protected BaseBuilder(S baseRepresentor) {
+			this.baseRepresentor = baseRepresentor;
+		}
+
+		protected final S baseRepresentor;
+
+	}
+
 	protected BaseRepresentor() {
 		binaryFunctions = new LinkedHashMap<>();
 		fieldFunctions = new LinkedHashMap<>();
@@ -242,12 +252,77 @@ public abstract class BaseRepresentor<T> {
 		types = new ArrayList<>();
 	}
 
-	protected BaseRepresentor(BaseRepresentor<T> baseRepresentor) {
-		binaryFunctions = baseRepresentor.binaryFunctions;
-		fieldFunctions = baseRepresentor.fieldFunctions;
-		nestedFieldFunctions = baseRepresentor.nestedFieldFunctions;
-		relatedModels = baseRepresentor.relatedModels;
-		types = baseRepresentor.types;
+	protected void addBinaryFunction(
+		FieldFunction<T, BinaryFile> fieldFunction) {
+
+		binaryFunctions.put(
+			fieldFunction.key, (BinaryFunction<T>)fieldFunction.function);
+
+		addFieldFunction(fieldFunction, "BINARY");
+	}
+
+	protected void addBooleanFunction(FieldFunction<T, Boolean> fieldFunction) {
+		addFieldFunction(fieldFunction, "BOOLEAN");
+	}
+
+	protected void addBooleanListFunction(
+		FieldFunction<T, List<Boolean>> fieldFunction) {
+
+		addFieldFunction(fieldFunction, "BOOLEAN_LIST");
+	}
+
+	protected <S> void addFieldFunction(
+		FieldFunction<T, S> fieldFunction, String key) {
+
+		List<FieldFunction<T, ?>> list = fieldFunctions.computeIfAbsent(
+			key, __ -> new ArrayList<>());
+
+		list.add(fieldFunction);
+	}
+
+	protected void addLanguageFunction(
+		FieldFunction<T, Function<Language, String>> fieldFunction) {
+
+		addFieldFunction(fieldFunction, "LOCALIZED");
+	}
+
+	protected void addLinkFunction(FieldFunction<T, String> fieldFunction) {
+		addFieldFunction(fieldFunction, "LINK");
+	}
+
+	protected void addNestedFieldFunction(
+		NestedFieldFunction<T, ?> nestedFieldFunction) {
+
+		nestedFieldFunctions.add(nestedFieldFunction);
+	}
+
+	protected void addNumberFunction(FieldFunction<T, Number> fieldFunction) {
+		addFieldFunction(fieldFunction, "NUMBER");
+	}
+
+	protected void addNumberListFunction(
+		FieldFunction<T, List<Number>> fieldFunction) {
+
+		addFieldFunction(fieldFunction, "NUMBER_LIST");
+	}
+
+	protected void addRelatedModel(RelatedModel<T, ?> relatedModel) {
+		relatedModels.add(relatedModel);
+	}
+
+	protected void addStringFunction(FieldFunction<T, String> fieldFunction) {
+		addFieldFunction(fieldFunction, "STRING");
+	}
+
+	protected void addStringListFunction(
+		FieldFunction<T, List<String>> fieldFunction) {
+
+		addFieldFunction(fieldFunction, "STRING_LIST");
+	}
+
+	protected void addTypes(String type, String... typesArray) {
+		types.add(type);
+		Collections.addAll(types, typesArray);
 	}
 
 	protected final Map<String, BinaryFunction<T>> binaryFunctions;
