@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -155,21 +154,12 @@ public class Representor<T> {
 	}
 
 	/**
-	 * Returns the representors used to render the subresources.
+	 * Returns the list of nested field functions.
 	 *
-	 * @return the representors
+	 * @return the list of nested field functions.
 	 */
-	public Map<String, Representor<?>> getNested() {
-		return _nested;
-	}
-
-	/**
-	 * Returns the mappers for the resource and the subresource.
-	 *
-	 * @return the mappers
-	 */
-	public Map<String, Function<T, ?>> getNestedFunctions() {
-		return _nestedFunctions;
+	public List<NestedFieldFunction<T, ?>> getNestedFieldFunctions() {
+		return _nestedFieldFunctions;
 	}
 
 	/**
@@ -547,10 +537,12 @@ public class Representor<T> {
 				String key, Function<T, W> transformFunction,
 				Function<Builder<W, ?>, Representor<W>> representorFunction) {
 
-				_representor._nested.put(
-					key, representorFunction.apply(new Builder<>()));
+				NestedFieldFunction<T, W> nestedFieldFunction =
+					new NestedFieldFunction<>(
+						key, transformFunction,
+						representorFunction.apply(new Builder<>()));
 
-				_representor._nestedFunctions.put(key, transformFunction);
+				_representor._nestedFieldFunctions.add(nestedFieldFunction);
 
 				return this;
 			}
@@ -705,8 +697,7 @@ public class Representor<T> {
 				}
 			};
 		_binaryFunctions = new LinkedHashMap<>();
-		_nested = new HashMap<>();
-		_nestedFunctions = new HashMap<>();
+		_nestedFieldFunctions = new ArrayList<>();
 		_relatedCollections = new ArrayList<>();
 		_relatedModels = new ArrayList<>();
 		_types = new ArrayList<>();
@@ -716,8 +707,7 @@ public class Representor<T> {
 	private final Map<String, List<FieldFunction<T, ?>>> _fieldFunctions;
 	private final Class<? extends Identifier<?>> _identifierClass;
 	private Function<T, ?> _identifierFunction;
-	private final Map<String, Representor<?>> _nested;
-	private final Map<String, Function<T, ?>> _nestedFunctions;
+	private final List<NestedFieldFunction<T, ?>> _nestedFieldFunctions;
 	private final List<RelatedCollection<? extends Identifier>>
 		_relatedCollections;
 	private final Supplier<List<RelatedCollection<?>>>
