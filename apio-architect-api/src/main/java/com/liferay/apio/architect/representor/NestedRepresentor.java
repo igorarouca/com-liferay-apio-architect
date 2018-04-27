@@ -21,6 +21,8 @@ import com.liferay.apio.architect.file.BinaryFile;
 import com.liferay.apio.architect.identifier.Identifier;
 import com.liferay.apio.architect.language.Language;
 import com.liferay.apio.architect.related.RelatedModel;
+import com.liferay.apio.architect.representor.function.FieldFunction;
+import com.liferay.apio.architect.representor.function.NestedFieldFunction;
 
 import java.util.Date;
 import java.util.List;

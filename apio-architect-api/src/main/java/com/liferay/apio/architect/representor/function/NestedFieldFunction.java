@@ -12,36 +12,47 @@
  * details.
  */
 
-package com.liferay.apio.architect.representor;
+package com.liferay.apio.architect.representor.function;
+
+import com.liferay.apio.architect.representor.NestedRepresentor;
 
 import java.util.function.Function;
 
 /**
- * Instances of this class represent the key which represents a model's field
- * and the function to calculate that field.
+ * Instances of this class represent a {@code Representor} nested field.
  *
  * @author Alejandro Hernández
  * @review
  */
-public class FieldFunction<T, S> {
+public class NestedFieldFunction<T, S> {
 
-	public FieldFunction(String key, Function<T, S> function) {
+	public NestedFieldFunction(
+		String key, Function<T, S> function,
+		NestedRepresentor<S> nestedRepresentor) {
+
+		this.nestedRepresentor = nestedRepresentor;
 		this.key = key;
 		this.function = function;
 	}
 
 	/**
-	 * The function that transforms the model into the field
+	 * The function that transforms the model into the value used in the {@code
+	 * NestedRepresentor#Builder}.
 	 *
 	 * @review
 	 */
 	public final Function<T, S> function;
 
 	/**
-	 * The field key
+	 * The field's key
 	 *
 	 * @review
 	 */
 	public final String key;
+
+	/**
+	 * The field's {@code NestedRepresentor}
+	 */
+	public final NestedRepresentor<S> nestedRepresentor;
 
 }

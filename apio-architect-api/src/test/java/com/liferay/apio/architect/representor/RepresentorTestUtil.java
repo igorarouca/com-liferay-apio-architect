@@ -20,6 +20,7 @@ import static org.hamcrest.core.Is.is;
 import com.liferay.apio.architect.identifier.Identifier;
 import com.liferay.apio.architect.related.RelatedModel;
 import com.liferay.apio.architect.representor.dummy.Dummy;
+import com.liferay.apio.architect.representor.function.FieldFunction;
 
 import java.util.List;
 import java.util.function.Function;
