@@ -17,6 +17,7 @@ package com.liferay.apio.architect.test.util.representor;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 
+import com.liferay.apio.architect.representor.NestedRepresentor;
 import com.liferay.apio.architect.representor.Representor;
 import com.liferay.apio.architect.test.util.identifier.FirstEmbeddedId;
 import com.liferay.apio.architect.test.util.identifier.RootModelId;
@@ -167,9 +168,6 @@ public class MockRepresentorCreator {
 			"nested2", rootModel -> (SecondEmbeddedModel)rootModel::getId,
 			nestedBuilder -> nestedBuilder.nestedTypes(
 				"Type 4"
-			).addBidirectionalModel(
-				"bidirectionalModel3", "bidirectionalKey",
-				FirstEmbeddedId.class, SecondEmbeddedModel::getId
 			).addString(
 				"string1", SecondEmbeddedModel::getId
 			).addNumber(
@@ -178,7 +176,7 @@ public class MockRepresentorCreator {
 				"linked3", ThirdEmbeddedId.class, __ -> "fifth"
 			).addNested(
 				"nested3", __ -> () -> "id 3",
-				(Representor.Builder<ThirdEmbeddedModel, ?>
+				(NestedRepresentor.Builder<ThirdEmbeddedModel>
 					thirdEmbeddedModelBuilder) ->
 					thirdEmbeddedModelBuilder.nestedTypes(
 						"Type 5"
@@ -187,8 +185,6 @@ public class MockRepresentorCreator {
 					).build()
 			).addNumber(
 				"number1", __ -> 42
-			).addRelatedCollection(
-				"relatedCollection3", ThirdEmbeddedId.class
 			).addString(
 				"string1", SecondEmbeddedModel::getId
 			).build()
