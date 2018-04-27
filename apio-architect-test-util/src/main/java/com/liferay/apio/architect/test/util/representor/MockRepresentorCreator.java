@@ -28,7 +28,6 @@ import com.liferay.apio.architect.test.util.model.SecondEmbeddedModel;
 import com.liferay.apio.architect.test.util.model.ThirdEmbeddedModel;
 
 import java.util.Date;
-import java.util.function.Function;
 
 /**
  * Provides methods that create {@link Representor} objects for {@link
@@ -97,106 +96,103 @@ public class MockRepresentorCreator {
 		Representor.Builder<RootModel, String> builder =
 			new Representor.Builder<>(RootModelId.class);
 
-		Representor.Builder<RootModel, String>.FirstStep firstStepBuilder =
-			builder.types(
-				"Type 1", "Type 2"
-			).identifier(
-				RootModel::getId
-			).addBinary(
-				"binary1", __ -> null
-			).addBinary(
-				"binary2", __ -> null
-			).addBoolean(
-				"boolean1", __ -> true
-			).addBoolean(
-				"boolean2", __ -> false
-			).addBooleanList(
-				"booleanList1", __ -> asList(true, true, false, false)
-			).addBooleanList(
-				"booleanList2", __ -> asList(true, false, true, false)
-			).addDate(
-				"date1", __ -> new Date(1465981200000L)
-			).addDate(
-				"date2", __ -> new Date(1491244560000L)
-			).addLinkedModel(
-				"embedded1", FirstEmbeddedId.class, __ -> "first"
-			).addLinkedModel(
-				"embedded2", FirstEmbeddedId.class, __ -> "second"
-			).addLinkedModel(
-				"linked1", FirstEmbeddedId.class, __ -> "third"
-			).addLinkedModel(
-				"linked2", FirstEmbeddedId.class, __ -> "fourth"
-			).addLink(
-				"link1", "www.liferay.com"
-			).addLink(
-				"link2", "community.liferay.com"
-			).addLocalizedStringByLanguage(
-				"localizedString1", (model, language) -> "Translated 1"
-			).addLocalizedStringByLanguage(
-				"localizedString2", (model, language) -> "Translated 2"
+		Representor.FirstStep<RootModel> firstStepBuilder = builder.types(
+			"Type 1", "Type 2"
+		).identifier(
+			RootModel::getId
+		).addBinary(
+			"binary1", __ -> null
+		).addBinary(
+			"binary2", __ -> null
+		).addBoolean(
+			"boolean1", __ -> true
+		).addBoolean(
+			"boolean2", __ -> false
+		).addBooleanList(
+			"booleanList1", __ -> asList(true, true, false, false)
+		).addBooleanList(
+			"booleanList2", __ -> asList(true, false, true, false)
+		).addDate(
+			"date1", __ -> new Date(1465981200000L)
+		).addDate(
+			"date2", __ -> new Date(1491244560000L)
+		).addLinkedModel(
+			"embedded1", FirstEmbeddedId.class, __ -> "first"
+		).addLinkedModel(
+			"embedded2", FirstEmbeddedId.class, __ -> "second"
+		).addLinkedModel(
+			"linked1", FirstEmbeddedId.class, __ -> "third"
+		).addLinkedModel(
+			"linked2", FirstEmbeddedId.class, __ -> "fourth"
+		).addLink(
+			"link1", "www.liferay.com"
+		).addLink(
+			"link2", "community.liferay.com"
+		).addLocalizedStringByLanguage(
+			"localizedString1", (model, language) -> "Translated 1"
+		).addLocalizedStringByLanguage(
+			"localizedString2", (model, language) -> "Translated 2"
+		).addNumber(
+			"number1", __ -> 2017
+		).addNumber(
+			"number2", __ -> 42
+		).addNumberList(
+			"numberList1", __ -> asList(1, 2, 3, 4, 5)
+		).addNumberList(
+			"numberList2", __ -> asList(6, 7, 8, 9, 10)
+		).addRelatedCollection(
+			"relatedCollection1", FirstEmbeddedId.class
+		).addRelatedCollection(
+			"relatedCollection2", FirstEmbeddedId.class
+		).addString(
+			"string1", __ -> "Live long and prosper"
+		).addString(
+			"string2", __ -> "Hypermedia"
+		).addStringList(
+			"stringList1", __ -> asList("a", "b", "c", "d", "e")
+		).addStringList(
+			"stringList2", __ -> asList("f", "g", "h", "i", "j")
+		).addNested(
+			"nested1", __ -> (FirstEmbeddedModel)() -> "id 1",
+			nestedBuilder -> nestedBuilder.nestedTypes(
+				"Type 3"
 			).addNumber(
 				"number1", __ -> 2017
+			).addString(
+				"string1", FirstEmbeddedModel::getId
+			).addString(
+				"string2", __ -> "string2"
+			).build()
+		).addNested(
+			"nested2", rootModel -> (SecondEmbeddedModel)rootModel::getId,
+			nestedBuilder -> nestedBuilder.nestedTypes(
+				"Type 4"
+			).addBidirectionalModel(
+				"bidirectionalModel3", "bidirectionalKey",
+				FirstEmbeddedId.class, SecondEmbeddedModel::getId
+			).addString(
+				"string1", SecondEmbeddedModel::getId
 			).addNumber(
-				"number2", __ -> 42
-			).addNumberList(
-				"numberList1", __ -> asList(1, 2, 3, 4, 5)
-			).addNumberList(
-				"numberList2", __ -> asList(6, 7, 8, 9, 10)
-			).addRelatedCollection(
-				"relatedCollection1", FirstEmbeddedId.class
-			).addRelatedCollection(
-				"relatedCollection2", FirstEmbeddedId.class
-			).addString(
-				"string1", __ -> "Live long and prosper"
-			).addString(
-				"string2", __ -> "Hypermedia"
-			).addStringList(
-				"stringList1", __ -> asList("a", "b", "c", "d", "e")
-			).addStringList(
-				"stringList2", __ -> asList("f", "g", "h", "i", "j")
+				"number1", __ -> 42
+			).addLinkedModel(
+				"linked3", ThirdEmbeddedId.class, __ -> "fifth"
 			).addNested(
-				"nested1", __ -> (FirstEmbeddedModel)() -> "id 1",
-				nestedBuilder -> nestedBuilder.nestedTypes(
-					"Type 3"
-				).addNumber(
-					"number1", __ -> 2017
-				).addString(
-					"string1", FirstEmbeddedModel::getId
-				).addString(
-					"string2", __ -> "string2"
-				).build()
-			).addNested(
-				"nested2", rootModel -> (SecondEmbeddedModel)rootModel::getId,
-				nestedBuilder -> nestedBuilder.nestedTypes(
-					"Type 4"
-				).addBidirectionalModel(
-					"bidirectionalModel3", "bidirectionalKey",
-					FirstEmbeddedId.class,
-					(Function<SecondEmbeddedModel, String>)
-						SecondEmbeddedModel::getId
-				).addString(
-					"string1", SecondEmbeddedModel::getId
-				).addNumber(
-					"number1", __ -> 42
-				).addLinkedModel(
-					"linked3", ThirdEmbeddedId.class, __ -> "fifth"
-				).addNested(
-					"nested3", __ -> () -> "id 3",
-					(Representor.Builder<ThirdEmbeddedModel, ?>
-						thirdEmbeddedModelBuilder) ->
-						thirdEmbeddedModelBuilder.nestedTypes(
-							"Type 5"
-						).addString(
-							"string1", ThirdEmbeddedModel::getId
-						).build()
-				).addNumber(
-					"number1", __ -> 42
-				).addRelatedCollection(
-					"relatedCollection3", ThirdEmbeddedId.class
-				).addString(
-					"string1", SecondEmbeddedModel::getId
-				).build()
-			);
+				"nested3", __ -> () -> "id 3",
+				(Representor.Builder<ThirdEmbeddedModel, ?>
+					thirdEmbeddedModelBuilder) ->
+					thirdEmbeddedModelBuilder.nestedTypes(
+						"Type 5"
+					).addString(
+						"string1", ThirdEmbeddedModel::getId
+					).build()
+			).addNumber(
+				"number1", __ -> 42
+			).addRelatedCollection(
+				"relatedCollection3", ThirdEmbeddedId.class
+			).addString(
+				"string1", SecondEmbeddedModel::getId
+			).build()
+		);
 
 		if (activateNulls) {
 			return firstStepBuilder.addBoolean(
