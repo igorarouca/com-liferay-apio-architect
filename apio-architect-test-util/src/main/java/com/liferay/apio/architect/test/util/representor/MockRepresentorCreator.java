@@ -155,7 +155,7 @@ public class MockRepresentorCreator {
 			"stringList2", __ -> asList("f", "g", "h", "i", "j")
 		).addNested(
 			"nested1", __ -> (FirstEmbeddedModel)() -> "id 1",
-			nestedBuilder -> nestedBuilder.nestedTypes(
+			nestedBuilder -> nestedBuilder.types(
 				"Type 3"
 			).addNumber(
 				"number1", __ -> 2017
@@ -166,7 +166,7 @@ public class MockRepresentorCreator {
 			).build()
 		).addNested(
 			"nested2", rootModel -> (SecondEmbeddedModel)rootModel::getId,
-			nestedBuilder -> nestedBuilder.nestedTypes(
+			nestedBuilder -> nestedBuilder.types(
 				"Type 4"
 			).addString(
 				"string1", SecondEmbeddedModel::getId
@@ -178,7 +178,7 @@ public class MockRepresentorCreator {
 				"nested3", __ -> () -> "id 3",
 				(NestedRepresentor.Builder<ThirdEmbeddedModel>
 					thirdEmbeddedModelBuilder) ->
-					thirdEmbeddedModelBuilder.nestedTypes(
+					thirdEmbeddedModelBuilder.types(
 						"Type 5"
 					).addString(
 						"string1", ThirdEmbeddedModel::getId
